@@ -1,11 +1,12 @@
 <?php
 /*
 Plugin Name: Google Remarketing Codes
-Plugin URI: http://seosalespro.com
+Plugin URI: https://www.tychesoftwares.com/
 Description: Include Google Remarketing Ad Codes on a per page or post basis. There is also a spot for a default code.
-Author: Hal Gatewood (OPUBCO)
+Author: Tyche Softwares
 Version: 1.1
-Author URI: http://www.halgatewood.com
+Author URI: https://www.tychesoftwares.com/
+Text Domain: wp-google-remarketing
 License: GPL2
 
 	Forked from:
@@ -22,6 +23,8 @@ call_wpGoogleRemarketing();
 class wpGoogleRemarketing
 {
 	private $default_post_types = array( 'page', 'post' );
+	
+	const WGR_VERSION = '1.1';
 
 	public function __construct()
 	{
@@ -36,6 +39,14 @@ class wpGoogleRemarketing
 			
 			add_action(	'admin_menu',		array( &$this, 'googleremarketing_admin_menu' ));
 			add_action( 'admin_init', 		array( &$this, 'googleremarketing_register_settings' ) );
+
+			require_once( plugin_dir_path(__FILE__) . 'includes/google-remarketing-all-component.php' );
+
+			//add_filter( 'ts_deativate_plugin_questions', array( &$this, 'wgr_deactivate_add_questions' ), 10, 1 );
+			add_filter( 'ts_tracker_data',               array( &$this, 'wgr_ts_add_plugin_tracking_data' ), 10, 1 );
+			add_filter( 'ts_tracker_opt_out_data',       array( &$this, 'wgr_get_data_for_opt_out' ), 10, 1 );
+			add_action( 'admin_init',                    array( &$this, 'wgr_admin_actions' ) );
+
 		}
 		else
 		{
@@ -224,5 +235,77 @@ class wpGoogleRemarketing
 		{
 			echo "\n\n<!-- Google Remarketing Pixel -->\n" . '<img src="'.$code.'" alt="" height="1" width="1" border="0" style="border:none !important;" />' . "\n\n";
 		}
+	}
+
+	function wgr_deactivate_add_questions ( $wem_deactivate_questions ) {
+
+		$wem_deactivate_questions = array(
+			0 => array(
+				'id'                => 4, 
+				'text'              => __( "WordPress Menus are not exported not getting exported.", "wem" ),
+				'input_type'        => '',
+				'input_placeholder' => ''
+				)
+
+		);
+		return $wem_deactivate_questions;
+	}
+
+	function wgr_admin_actions ( ) {
+		/**
+		 * We need to store the plugin version in DB, so we can show the welcome page and other contents.
+		 */
+		$wem_version_in_db = get_option( 'wp_google_remarketing_version' ); 
+		if ( $wem_version_in_db != self::WGR_VERSION ) {
+			update_option( 'wp_google_remarketing_version', self::WGR_VERSION );
+			define ( 'WGR_VERSION', self::WGR_VERSION );
+		}
+	}
+
+	/**
+	 * Plugin's data to be tracked when Allow option is choosed.
+	 *
+	 * @hook ts_tracker_data
+	 *
+	 * @param array $data Contains the data to be tracked.
+	 *
+	 * @return array Plugin's data to track.
+	 * 
+	 */
+
+	public static function wgr_ts_add_plugin_tracking_data ( $data ) {
+		if ( isset( $_GET[ 'wp_google_remarketing_tracker_optin' ] ) && isset( $_GET[ 'wp_google_remarketing_tracker_nonce' ] ) && wp_verify_nonce( $_GET[ 'wp_google_remarketing_tracker_nonce' ], 'wp_google_remarketing_tracker_optin' ) ) {
+
+			$plugin_data[ 'ts_meta_data_table_name' ] = 'ts_tracking_wgr_meta_data';
+			$plugin_data[ 'ts_plugin_name' ]		  = 'Google Remarketing Codes';
+			/**
+			 * Add Plugin data
+			 */
+			$plugin_data[ 'wgr_plugin_version' ]      = self::WGR_VERSION;
+			
+			$plugin_data[ 'wgr_allow_tracking' ]      = get_option ( 'wgr_allow_tracking' );
+			$data[ 'plugin_data' ]                    = $plugin_data;
+		}
+		return $data;
+	}
+	
+	/**
+	 * Tracking data to send when No, thanks. button is clicked.
+	 *
+	 * @hook ts_tracker_opt_out_data
+	 *
+	 * @param array $params Parameters to pass for tracking data.
+	 *
+	 * @return array Data to track when opted out.
+	 * 
+	 */
+	public static function wgr_get_data_for_opt_out ( $params ) {
+		$plugin_data[ 'ts_meta_data_table_name']   = 'ts_tracking_wgr_meta_data';
+		$plugin_data[ 'ts_plugin_name' ]		   = 'Google Remarketing Codes';
+		
+		// Store count info
+		$params[ 'plugin_data' ]  				   = $plugin_data;
+		
+		return $params;
 	}
 }
