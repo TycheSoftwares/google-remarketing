@@ -143,7 +143,6 @@ class wpGoogleRemarketing
 	?>
 		
 		<div class="wrap">
-			<?php screen_icon(); ?>
 			<h2>Google Remarketing</h2>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'googleremarketing-group' ); ?>
@@ -291,7 +290,7 @@ class wpGoogleRemarketing
 			 */
 			$plugin_data[ 'wgr_plugin_version' ]      = self::WGR_VERSION;
 			
-			$plugin_data[ 'wgr_allow_tracking' ]      = get_option ( 'wgr_allow_tracking' );
+			$plugin_data[ 'wgr_allow_tracking' ]      = get_option ( 'wp_google_remarketing_allow_tracking' );
 			$data[ 'plugin_data' ]                    = $plugin_data;
 		}
 		return $data;
