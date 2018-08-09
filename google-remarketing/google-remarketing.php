@@ -40,8 +40,11 @@ class wpGoogleRemarketing
 			add_action(	'admin_menu',		array( &$this, 'googleremarketing_admin_menu' ));
 			add_action( 'admin_init', 		array( &$this, 'googleremarketing_register_settings' ) );
 
-			require_once( plugin_dir_path(__FILE__) . 'includes/google-remarketing-all-component.php' );
+			add_action( 'init', 			array( &$this, 'googleremarketing_add_files' ) );
 
+			/**
+			 * We dont have any plugin specific questions
+			 */
 			//add_filter( 'ts_deativate_plugin_questions', array( &$this, 'wgr_deactivate_add_questions' ), 10, 1 );
 			add_filter( 'ts_tracker_data',               array( &$this, 'wgr_ts_add_plugin_tracking_data' ), 10, 1 );
 			add_filter( 'ts_tracker_opt_out_data',       array( &$this, 'wgr_get_data_for_opt_out' ), 10, 1 );
@@ -53,8 +56,13 @@ class wpGoogleRemarketing
 			add_action(	'wp_footer', 		array( &$this,'embed_googleremarketing_meta_box_content' ), 100);
 		}
 	}
-	
-	
+	/**
+	 * Add boilerplate file
+	 */
+	function googleremarketing_add_files () {
+		require_once( plugin_dir_path(__FILE__) . 'includes/google-remarketing-all-component.php' );
+	}
+
 	// SETTINGS LINK ON PLUGIN PAGE
 	function googleremarketing_settings_link($links) 
 	{ 
