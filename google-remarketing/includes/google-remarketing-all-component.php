@@ -58,12 +58,12 @@ if ( ! class_exists( 'WP_Google_Remarketing_Component' ) ) {
                 $wp_google_remarketing_deativate = new WP_Google_Remarketing_TS_deactivate;
                 $wp_google_remarketing_deativate->init ( $wp_google_remarketing_file_name, $wp_google_remarketing_plugin_name );
 
-                $user = wp_get_current_user();
+                // $user = wp_get_current_user();
                 
-                if ( in_array( 'administrator', (array) $user->roles ) ) {
+                // if ( in_array( 'administrator', (array) $user->roles ) ) {
                 
-                    new WP_Google_Remarketing_TS_Welcome ( $wp_google_remarketing_plugin_name, $wp_google_remarketing_plugin_prefix, $wp_google_remarketing_locale, $wp_google_remarketing_plugin_folder_name, $wp_google_remarketing_plugin_dir_name, $wp_google_remarketing_get_previous_version );
-                }
+                //     new WP_Google_Remarketing_TS_Welcome ( $wp_google_remarketing_plugin_name, $wp_google_remarketing_plugin_prefix, $wp_google_remarketing_locale, $wp_google_remarketing_plugin_folder_name, $wp_google_remarketing_plugin_dir_name, $wp_google_remarketing_get_previous_version );
+                // }
                 // $ts_pro_wp_google_remarketing = self::wp_google_remarketing_get_faq ();
                 // new wp_google_remarketing_TS_Faq_Support( $wp_google_remarketing_plugin_name, $wp_google_remarketing_plugin_prefix, $wp_google_remarketing_plugins_page, $wp_google_remarketing_locale, $wp_google_remarketing_plugin_folder_name, $wp_google_remarketing_plugin_slug, $ts_pro_wp_google_remarketing, '', $wp_google_remarketing_file_name );
                 
