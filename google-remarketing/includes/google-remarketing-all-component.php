@@ -67,8 +67,10 @@ if ( ! class_exists( 'WP_Google_Remarketing_Component' ) ) {
                 // $ts_pro_wp_google_remarketing = self::wp_google_remarketing_get_faq ();
                 // new wp_google_remarketing_TS_Faq_Support( $wp_google_remarketing_plugin_name, $wp_google_remarketing_plugin_prefix, $wp_google_remarketing_plugins_page, $wp_google_remarketing_locale, $wp_google_remarketing_plugin_folder_name, $wp_google_remarketing_plugin_slug, $ts_pro_wp_google_remarketing, '', $wp_google_remarketing_file_name );
                 
-                $ts_pro_notices = self::wp_google_remarketing_get_notice_text ();
-				new WP_Google_Remarketing_ts_pro_notices( $wp_google_remarketing_plugin_name, $wp_google_remarketing_lite_plugin_prefix, $wp_google_remarketing_plugin_prefix, $ts_pro_notices, $wp_google_remarketing_file_name, $wp_google_remarketing_pro_file_name );
+                if ( in_array('woocommerce/woocommerce.php', get_option('active_plugins') ) ) {
+                    $ts_pro_notices = self::wp_google_remarketing_get_notice_text ();
+                    new WP_Google_Remarketing_ts_pro_notices( $wp_google_remarketing_plugin_name, $wp_google_remarketing_lite_plugin_prefix, $wp_google_remarketing_plugin_prefix, $ts_pro_notices, $wp_google_remarketing_file_name, $wp_google_remarketing_pro_file_name );
+                }
 
             }
         }
