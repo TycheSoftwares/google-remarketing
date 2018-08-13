@@ -114,6 +114,10 @@ class WP_Google_Remarketing_TS_Welcome {
 		self::$template_base  		   = $this->ts_get_template_path();
 	}
 
+	/**
+	 * It will remove the plguin from the all activated plugin of TS.
+	 * @hook admin_init
+	 */
 	function ts_delete_plugin_from_active_check ( ){
 
 		$active_ts_plugins = get_option( 'active_TS_plugins', array() );
@@ -126,6 +130,10 @@ class WP_Google_Remarketing_TS_Welcome {
 		}
 	}
 	
+	/**
+	 * It will add the plugin in the array. This array contain all activated plugin of TS.
+	 * @hook register_deactivation_hook
+	 */
 	function ts_add_plugin_active_check () {
 
 		$active_ts_plugins = get_option( 'active_TS_plugins', array() );
